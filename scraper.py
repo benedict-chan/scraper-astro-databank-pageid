@@ -20,8 +20,8 @@ for x in range(0, 100):
 	resp = requests.get(url=api_url, params=params)
 	try:
 		results_json = resp.json()
-		apcontinue = results_json["query-continue"]["allpages"]["apcontinue"]
 		all_pages = results_json["query"]["allpages"]
+		apcontinue = results_json["query-continue"]["allpages"]["apcontinue"]
 	except Exception, e:
 		apcontinue = "" # break the loop later
 	for page in all_pages:
