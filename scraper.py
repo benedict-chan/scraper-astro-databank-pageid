@@ -27,11 +27,11 @@ params = {
 	"format":"json", 
 	"action":"query", 
 	"list":"allpages", 
-	"aplimit":"10" 
+	"aplimit":"500" 
 }
 params.update({"apcontinue":apcontinue})
 
-for x in range(0, 1):
+for x in range(0, 100):
 	params.update({"apcontinue":apcontinue})
 	resp = requests.get(url=api_url, params=params)
 	try:
