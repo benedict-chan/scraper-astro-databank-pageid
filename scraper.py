@@ -5,18 +5,27 @@ import pprint
 
 
 def request_page_using_id ( page_id ):
-	p_params = { 
-	    "format":"json", 
-	    "action":"query", 
-	    "prop":"revisions", 
-	    "rvprop":"content" 
-	}
-	p_params.update({"pageids":page_id})
-	p_api_url = "http://www.astro.com/wiki/astro-databank/api.php?"
-	resp = requests.get(url=p_api_url, params=p_params)
-	single_data = resp.json()
-	json_str = json.dumps(single_data)
-	return json_str
+	json_str = ""
+	try:
+		p_params = { 
+		    "format":"json", 
+		    "action":"query", 
+		    "prop":"revisions", 
+		    "rvprop":"content" 
+		}
+		p_params.update({"pageids":page_id})
+		p_api_url = "http://www.astro.com/wiki/astro-databank/api.php?"
+		resp = requests.get(url=p_api_url, params=p_params)
+		single_data = resp.json()
+		json_str = json.dumps(single_data)
+		pass
+	except Exception, e:
+		print "page %s fail to parse", page_id
+	finally:
+		return json_str
+	pass
+
+
 
 
 api_url = "http://www.astro.com/wiki/astro-databank/api.php?"
@@ -27,11 +36,11 @@ params = {
 	"format":"json", 
 	"action":"query", 
 	"list":"allpages", 
-	"aplimit":"500" 
+	"aplimit":"10" 
 }
 params.update({"apcontinue":apcontinue})
 
-for x in range(0, 100):
+for x in range(0, 1):
 	params.update({"apcontinue":apcontinue})
 	resp = requests.get(url=api_url, params=params)
 	try:
