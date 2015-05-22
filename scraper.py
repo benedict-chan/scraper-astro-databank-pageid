@@ -20,7 +20,7 @@ def request_page_using_id ( page_id ):
 		json_str = json.dumps(single_data)
 		pass
 	except Exception, e:
-		print "page %s fail to parse", page_id
+		print "page %s fail to parse" % page_id
 	finally:
 		return json_str
 	pass
@@ -36,11 +36,11 @@ params = {
 	"format":"json", 
 	"action":"query", 
 	"list":"allpages", 
-	"aplimit":"10" 
+	"aplimit":"500" 
 }
 params.update({"apcontinue":apcontinue})
 
-for x in range(0, 1):
+for x in range(0, 100):
 	params.update({"apcontinue":apcontinue})
 	resp = requests.get(url=api_url, params=params)
 	try:
@@ -55,8 +55,12 @@ for x in range(0, 1):
 		data["id"] = page["pageid"]
 		data["page_id"] = page["pageid"]
 		data["page_title"] = page["title"]
-		data["json_str"] = request_page_using_id(page["pageid"])
-		scraperwiki.sqlite.save(unique_keys=['id'], data=data, table_name="data")
+		is_data_exist_in_db = scraperwiki.sqlite.execute("select * from data where page_id = '%s'" % page["pageid"])["data"]
+		if is_data_exist_in_db:
+			print "%s exists in DB" % page["pageid"]
+		else:
+			data["json_str"] = request_page_using_id(page["pageid"])
+			scraperwiki.sqlite.save(unique_keys=['id'], data=data, table_name="data")
 		pass
 	if not apcontinue:
 		break
